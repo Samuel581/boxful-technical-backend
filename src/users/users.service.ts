@@ -20,7 +20,10 @@ export class UsersService {
         email: userEmail,
       },
     });
-    if(!user) throw new BadRequestException(`User with the email ${userEmail} was not found`);
+    if (!user)
+      throw new BadRequestException(
+        `User with the email ${userEmail} was not found`,
+      );
     return user;
   }
 }

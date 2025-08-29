@@ -1,6 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
+import { RegisterDTO } from './dto/register.dto';
+import {
+  hashPassword,
+  verifyPassword,
+} from 'src/common/helpers/password.helper';
+import { LoginDTO } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -8,4 +18,27 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+
+  async register(userCreationInfo: RegisterDTO) {
+    const hashedPassword = await hashPassword(userCreationInfo.password);
+    const user = await this.usersService.create({
+      ...userCreationInfo,
+      password: hashedPassword,
+    });
+    return user;
+  }
+
+  async login(loginInfo: LoginDTO) {
+    const user = await this.usersService.findByEmail(loginInfo.email);
+    if (!user)
+      throw new BadRequestException(
+        `User with email ${loginInfo.email} not found`,
+      );
+    const matchingPassword = await verifyPassword(
+      loginInfo.password,
+      user.password,
+    );
+    if (!matchingPassword)
+      throw new UnauthorizedException(`Password or user incorrect`);
+  }
 }
