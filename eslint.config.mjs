@@ -28,7 +28,23 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      'curly': 'off',
+      'arrow-body-style': 'off',
+      'prefer-arrow-callback': 'off',
+      'function-paren-newline': 'off',
+      'prefer-destructuring': 'off',
+      
+      // Prettier overrides (these might conflict with prettier)
+      'prettier/prettier': ['error', {
+        'singleQuote': true,
+        'trailingComma': 'es5',
+        'printWidth': 120,
+        'arrowParens': 'avoid'
+      }],
     },
   },
 );
