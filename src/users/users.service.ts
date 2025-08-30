@@ -20,10 +20,22 @@ export class UsersService {
         email: userEmail,
       },
     });
-    if (!user)
-      throw new BadRequestException(
-        `User with the email ${userEmail} was not found`,
-      );
+    if (!user) throw new BadRequestException(`User with the email ${userEmail} was not found`);
+    return user;
+  }
+
+  async findAll(): Promise<User[] | null> {
+    const users = await this.prisma.user.findMany();
+    return users;
+  }
+
+  async findById(userId: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) throw new BadRequestException(`User with ID ${userId} was not found`);
     return user;
   }
 }
