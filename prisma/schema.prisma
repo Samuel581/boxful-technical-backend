@@ -21,26 +21,14 @@ model User {
   isActive  Boolean  @default(true)
   // ENUM for encapsule options
   sex       Sex
+  bornDate  DateTime
   phone     String   @unique
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   orders    Order[]
-}
-
-model Product {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  name   String
-  // Weight measured in pounds
-  weight Float
-  // Size measurment made in centimeters
-  length Int
-  height Int
-  width  Int
-  // Order relations
-  orderId String @db.ObjectId
-  order Order @relation(fields: [orderId], references: [id])
+  @@map("users")
 }
 
 model Order {
@@ -65,7 +53,16 @@ model Order {
   // Order managment 
   scheduledDate DateTime
   // Order content
-  products Product[]
+  products ProductData[]
+  @@map("orders")
+}
+
+type ProductData {
+  name    String
+  weight  Float
+  length  Int
+  height  Int
+  width   Int
 }
 
 enum Sex {
