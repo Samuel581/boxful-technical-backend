@@ -15,7 +15,9 @@ export class OrdersController {
   }
 
   @Get()
-  findAll() {
-    return this.ordersService.findAll();
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  findAll(@Request() req: { user: { userId: string } }) {
+    return this.ordersService.findAll(req.user.userId);
   }
 }
