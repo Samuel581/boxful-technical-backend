@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsEnum } from 'class-validator';
+import { IsString, IsEmail, IsEnum, IsDateString } from 'class-validator';
 import { Sex } from '../../../generated/prisma';
 
 export class RegisterDTO {
@@ -19,4 +19,7 @@ export class RegisterDTO {
 
   @IsString()
   password: string;
+
+  @IsDateString()
+  bornDate: string;
 }
