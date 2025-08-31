@@ -1,98 +1,292 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Boxful Technical Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A robust NestJS backend API for Boxful, a logistics and storage management platform. This project provides user authentication, order management, and product tracking capabilities.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- **User Authentication**: JWT-based authentication with password hashing
+- **Order Management**: Create and manage delivery orders with product details
+- **User Management**: User registration, login, and profile management
+- **Product Tracking**: Track product dimensions and weights
+- **API Documentation**: Swagger/OpenAPI documentation
+- **Database**: MongoDB with Prisma ORM
+- **Validation**: Request validation with class-validator
+- **Security**: Password hashing with bcrypt, JWT tokens
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🛠️ Tech Stack
 
-## Project setup
+- **Framework**: NestJS
+- **Database**: MongoDB
+- **ORM**: Prisma
+- **Authentication**: JWT with Passport.js
+- **Validation**: class-validator & class-transformer
+- **Documentation**: Swagger/OpenAPI
+- **Password Hashing**: bcrypt
+- **Language**: TypeScript
 
-```bash
-$ pnpm install
+## 📋 Prerequisites
+
+- Node.js (v18 or higher)
+- pnpm (recommended) or npm
+- MongoDB database (local or cloud)
+- Git
+
+## 🚀 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd boxful-technical-backend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Environment Setup**
+   ```bash
+   cp example.env .env
+   ```
+   
+   Update the `.env` file with your configuration:
+   ```env
+   DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/database"
+   BCRYPT_SALT_ROUNDS=12
+   JWT_SECRET_KEY="your-super-secret-jwt-key"
+   JWT_EXPIRES_IN="1d"
+   PORT=3000
+   ```
+
+4. **Database Setup**
+   ```bash
+   # Generate Prisma client
+   pnpm prisma generate
+   
+   # Run database migrations
+   pnpm prisma db push
+   ```
+
+5. **Start the application**
+   ```bash
+   # Development mode
+   pnpm start:dev
+   
+   # Production mode
+   pnpm build
+   pnpm start:prod
+   ```
+
+## 📚 API Documentation
+
+Once the server is running, you can access the Swagger documentation at:
+```
+http://localhost:3000/api
 ```
 
-## Compile and run the project
+## 🔐 Authentication
 
-```bash
-# development
-$ pnpm run start
+The API uses JWT-based authentication. To access protected endpoints:
 
-# watch mode
-$ pnpm run start:dev
+1. **Register a new user**
+   ```bash
+   POST /auth/register
+   {
+     "firstName": "John",
+     "lastName": "Doe",
+     "sex": "MALE",
+     "bornDate": "1990-01-01T00:00:00.000Z",
+     "phone": "+1234567890",
+     "email": "john.doe@example.com",
+     "password": "securepassword123"
+   }
+   ```
 
-# production mode
-$ pnpm run start:prod
+2. **Login to get JWT token**
+   ```bash
+   POST /auth/login
+   {
+     "email": "john.doe@example.com",
+     "password": "securepassword123"
+   }
+   ```
+
+3. **Use the token in protected endpoints**
+   ```bash
+   Authorization: Bearer <your-jwt-token>
+   ```
+
+## 📦 API Endpoints
+
+### Authentication
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Login user and get JWT token
+
+### Orders (Protected)
+- `POST /orders` - Create a new order
+- `GET /orders` - Get all orders for the authenticated user
+
+### Users (Protected)
+- `GET /users` - Get all users (admin only)
+- `GET /users/:id` - Get user by ID
+
+## 📊 Database Schema
+
+### User Model
+```prisma
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  isActive  Boolean  @default(true)
+  sex       Sex
+  bornDate  DateTime
+  phone     String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+}
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+### Order Model
+```prisma
+model Order {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  
+  // Collection & Destination info
+  collectionAddress    String
+  destinationAddress   String
+  destinationFirstName String
+  destinationLastName  String
+  destinationEmail     String
+  destinationPhone     String
+  
+  // Location details
+  department       String
+  province         String
+  addressReference String
+  additionalNotes  String?
+  
+  // Order management
+  scheduledDate DateTime
+  products      ProductData[]
+}
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+### Product Data Type
+```prisma
+type ProductData {
+  name   String
+  weight Float
+  length Int
+  height Int
+  width  Int
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🔧 Development
 
-## Resources
+### Available Scripts
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+# Development
+pnpm start:dev          # Start in development mode with hot reload
+pnpm start:debug        # Start in debug mode
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Building
+pnpm build              # Build the application
+pnpm start:prod         # Start in production mode
 
-## Support
+# Testing
+pnpm test               # Run unit tests
+pnpm test:watch         # Run tests in watch mode
+pnpm test:cov           # Run tests with coverage
+pnpm test:e2e           # Run end-to-end tests
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Code Quality
+pnpm lint               # Run ESLint
+pnpm format             # Format code with Prettier
+```
 
-## Stay in touch
+### Project Structure
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+src/
+├── auth/                 # Authentication module
+│   ├── config/          # JWT configuration
+│   ├── dto/             # Auth DTOs
+│   ├── guard/           # JWT guards
+│   ├── strategies/      # Passport strategies
+│   └── types/           # Auth types
+├── common/              # Shared utilities
+│   └── helpers/         # Helper functions
+├── orders/              # Orders module
+│   └── dto/             # Order DTOs
+├── prisma/              # Database service
+├── users/               # Users module
+│   └── dto/             # User DTOs
+└── main.ts              # Application entry point
+```
 
-## License
+## 🔒 Security Features
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- **Password Hashing**: Passwords are hashed using bcrypt with configurable salt rounds
+- **JWT Authentication**: Secure token-based authentication
+- **Input Validation**: All inputs are validated using class-validator
+- **CORS Protection**: Cross-origin resource sharing protection
+- **Environment Variables**: Sensitive data stored in environment variables
+
+## 🧪 Testing
+
+The project includes comprehensive testing setup:
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests with coverage
+pnpm test:cov
+
+# Run end-to-end tests
+pnpm test:e2e
+```
+
+## 📝 Environment Variables
+
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `DATABASE_URL` | MongoDB connection string | Yes | - |
+| `BCRYPT_SALT_ROUNDS` | Salt rounds for password hashing | No | 12 |
+| `JWT_SECRET_KEY` | Secret key for JWT tokens | Yes | - |
+| `JWT_EXPIRES_IN` | JWT token expiration time | No | "1d" |
+| `PORT` | Server port | No | 3000 |
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the UNLICENSED license.
+
+## 🆘 Support
+
+For support and questions:
+- Create an issue in the repository
+- Contact the development team
+
+## 🔄 Version History
+
+- **v0.0.1** - Initial release with authentication and order management
+
+---
+
+**Note**: This is a technical backend project for Boxful. Make sure to configure your environment variables properly before running the application.
