@@ -47,7 +47,6 @@ model Order {
   // Location details 
   department       String
   province         String
-  reference        String
   addressReference String
   additionalNotes  String?
   // Order managment 
