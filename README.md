@@ -81,7 +81,7 @@ A robust NestJS backend API for Boxful, a logistics and storage management platf
 
 Once the server is running, you can access the Swagger documentation at:
 ```
-http://localhost:3000/api
+http://localhost:3000/docs
 ```
 
 ## 🔐 Authentication
