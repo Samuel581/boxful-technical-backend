@@ -87,94 +87,7 @@ A robust NestJS backend API for Boxful, a logistics and storage management platf
    cd boxful-technical-backend
    ```
 
-2. **Create Docker Compose file**
-   Create a `docker-compose.yml` file in the root directory:
-   ```yaml
-   version: '3.8'
-   
-   services:
-     backend:
-       build: .
-       ports:
-         - "3000:3000"
-       environment:
-         - DATABASE_URL=mongodb://mongo:27017/boxful
-         - BCRYPT_SALT_ROUNDS=12
-         - JWT_SECRET_KEY=your-super-secret-jwt-key
-         - JWT_EXPIRES_IN=1d
-         - PORT=3000
-       depends_on:
-         - mongo
-       networks:
-         - boxful-network
-       volumes:
-         - .:/app
-         - /app/node_modules
-   
-     mongo:
-       image: mongo:latest
-       ports:
-         - "27017:27017"
-       environment:
-         - MONGO_INITDB_DATABASE=boxful
-       volumes:
-         - mongo_data:/data/db
-       networks:
-         - boxful-network
-   
-     # Frontend service (if you have a frontend)
-     frontend:
-       build: ../frontend  # Adjust path to your frontend directory
-       ports:
-         - "3001:3001"
-       environment:
-         - REACT_APP_API_URL=http://backend:3000
-       depends_on:
-         - backend
-       networks:
-         - boxful-network
-   
-   volumes:
-     mongo_data:
-   
-   networks:
-     boxful-network:
-       driver: bridge
-   ```
-
-3. **Create Dockerfile**
-   Create a `Dockerfile` in the root directory:
-   ```dockerfile
-   FROM node:18-alpine
-   
-   WORKDIR /app
-   
-   # Install pnpm
-   RUN npm install -g pnpm
-   
-   # Copy package files
-   COPY package.json pnpm-lock.yaml ./
-   
-   # Install dependencies
-   RUN pnpm install
-   
-   # Copy source code
-   COPY . .
-   
-   # Generate Prisma client
-   RUN pnpm prisma generate
-   
-   # Build the application
-   RUN pnpm build
-   
-   # Expose port
-   EXPOSE 3000
-   
-   # Start the application
-   CMD ["pnpm", "start:prod"]
-   ```
-
-4. **Start with Docker Compose**
+2. **Start with Docker Compose**
    ```bash
    # Start all services
    docker-compose up -d
@@ -186,7 +99,7 @@ A robust NestJS backend API for Boxful, a logistics and storage management platf
    docker-compose down
    ```
 
-5. **Database Setup with Docker**
+3. **Database Setup with Docker**
    ```bash
    # Run Prisma migrations
    docker-compose exec backend pnpm prisma db push
