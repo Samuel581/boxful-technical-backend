@@ -110,7 +110,7 @@ A robust NestJS backend API for Boxful, a logistics and storage management platf
 
 ### Network Configuration
 
-The Docker setup includes a shared network (`boxful-network`) that allows:
+The Docker setup includes a shared network (`shared-network`) that allows:
 
 - **Backend-Frontend Communication**: The frontend can communicate with the backend using `http://backend:3000`
 - **Backend-Database Communication**: The backend connects to MongoDB using `mongodb://mongo:27017/boxful`
@@ -120,7 +120,7 @@ The Docker setup includes a shared network (`boxful-network`) that allows:
 - The backend service is accessible at `http://localhost:3000`
 - The frontend service is accessible at `http://localhost:3001`
 - MongoDB is accessible at `mongodb://localhost:27017`
-- All services communicate internally using the `boxful-network`
+- All services communicate internally using the `shared-network`
 
 ## 📚 API Documentation
 
