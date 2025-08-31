@@ -92,7 +92,6 @@ export class CreateOrderDto {
   @IsString()
   destinationPhone: string;
 
-  // Location details
   @ApiProperty({
     description: 'Department of the destination address',
     example: 'Lima',
@@ -108,15 +107,8 @@ export class CreateOrderDto {
   province: string;
 
   @ApiProperty({
-    description: 'Reference for the destination address',
-    example: 'Near the central park',
-  })
-  @IsString()
-  reference: string;
-
-  @ApiProperty({
     description: 'Additional address reference',
-    example: 'Apartment 101, Building B',
+    example: 'Near the central par',
   })
   @IsString()
   addressReference: string;
