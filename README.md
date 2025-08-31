@@ -33,6 +33,8 @@ A robust NestJS backend API for Boxful, a logistics and storage management platf
 
 ## 🚀 Installation
 
+### Option 1: Local Development
+
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
@@ -76,6 +78,136 @@ A robust NestJS backend API for Boxful, a logistics and storage management platf
    pnpm build
    pnpm start:prod
    ```
+
+### Option 2: Docker Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd boxful-technical-backend
+   ```
+
+2. **Create Docker Compose file**
+   Create a `docker-compose.yml` file in the root directory:
+   ```yaml
+   version: '3.8'
+   
+   services:
+     backend:
+       build: .
+       ports:
+         - "3000:3000"
+       environment:
+         - DATABASE_URL=mongodb://mongo:27017/boxful
+         - BCRYPT_SALT_ROUNDS=12
+         - JWT_SECRET_KEY=your-super-secret-jwt-key
+         - JWT_EXPIRES_IN=1d
+         - PORT=3000
+       depends_on:
+         - mongo
+       networks:
+         - boxful-network
+       volumes:
+         - .:/app
+         - /app/node_modules
+   
+     mongo:
+       image: mongo:latest
+       ports:
+         - "27017:27017"
+       environment:
+         - MONGO_INITDB_DATABASE=boxful
+       volumes:
+         - mongo_data:/data/db
+       networks:
+         - boxful-network
+   
+     # Frontend service (if you have a frontend)
+     frontend:
+       build: ../frontend  # Adjust path to your frontend directory
+       ports:
+         - "3001:3001"
+       environment:
+         - REACT_APP_API_URL=http://backend:3000
+       depends_on:
+         - backend
+       networks:
+         - boxful-network
+   
+   volumes:
+     mongo_data:
+   
+   networks:
+     boxful-network:
+       driver: bridge
+   ```
+
+3. **Create Dockerfile**
+   Create a `Dockerfile` in the root directory:
+   ```dockerfile
+   FROM node:18-alpine
+   
+   WORKDIR /app
+   
+   # Install pnpm
+   RUN npm install -g pnpm
+   
+   # Copy package files
+   COPY package.json pnpm-lock.yaml ./
+   
+   # Install dependencies
+   RUN pnpm install
+   
+   # Copy source code
+   COPY . .
+   
+   # Generate Prisma client
+   RUN pnpm prisma generate
+   
+   # Build the application
+   RUN pnpm build
+   
+   # Expose port
+   EXPOSE 3000
+   
+   # Start the application
+   CMD ["pnpm", "start:prod"]
+   ```
+
+4. **Start with Docker Compose**
+   ```bash
+   # Start all services
+   docker-compose up -d
+   
+   # View logs
+   docker-compose logs -f backend
+   
+   # Stop all services
+   docker-compose down
+   ```
+
+5. **Database Setup with Docker**
+   ```bash
+   # Run Prisma migrations
+   docker-compose exec backend pnpm prisma db push
+   
+   # Generate Prisma client
+   docker-compose exec backend pnpm prisma generate
+   ```
+
+### Network Configuration
+
+The Docker setup includes a shared network (`boxful-network`) that allows:
+
+- **Backend-Frontend Communication**: The frontend can communicate with the backend using `http://backend:3000`
+- **Backend-Database Communication**: The backend connects to MongoDB using `mongodb://mongo:27017/boxful`
+- **Service Discovery**: Services can reference each other by their service names
+
+**Important Notes:**
+- The backend service is accessible at `http://localhost:3000`
+- The frontend service is accessible at `http://localhost:3001`
+- MongoDB is accessible at `mongodb://localhost:27017`
+- All services communicate internally using the `boxful-network`
 
 ## 📚 API Documentation
 
